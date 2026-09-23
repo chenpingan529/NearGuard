@@ -80,7 +80,7 @@ struct PairingTests {
 
     @Test func 测距报告校验() throws {
         let device = PairedDevice(deviceID: deviceID, name: "iPhone", publicKey: phone.publicKey, pairedAt: now)
-        var book = ChallengeBook()
+        var book = ChallengeBook(macID: macID)
         let challenge = book.issue(now: now)
         let report = ProximityReport(macID: macID, deviceID: deviceID, nonce: challenge.nonce, rssi: -50, issuedAt: now)
         let envelope = try SignedEnvelope.seal(report, with: phone)
@@ -94,7 +94,7 @@ struct PairingTests {
 
     @Test func 发给别的Mac的报告被拒绝() throws {
         let device = PairedDevice(deviceID: deviceID, name: "iPhone", publicKey: phone.publicKey, pairedAt: now)
-        var book = ChallengeBook()
+        var book = ChallengeBook(macID: macID)
         let challenge = book.issue(now: now)
         let report = ProximityReport(
             macID: UUID(), deviceID: deviceID, nonce: challenge.nonce, rssi: -50, issuedAt: now)

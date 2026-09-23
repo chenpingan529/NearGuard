@@ -99,11 +99,14 @@ public struct PairingAccept: SignedMessage, Equatable {
 }
 
 /// Mac → iPhone：测距挑战，明文，不需要签名。
+/// 带上 `macID`，附近有多台 Mac 时 iPhone 能先确认连的是不是自己配对的那台。
 public struct Challenge: Codable, Equatable, Sendable {
+    public var macID: UUID
     public var nonce: Data
     public var issuedAt: Date
 
-    public init(nonce: Data, issuedAt: Date) {
+    public init(macID: UUID, nonce: Data, issuedAt: Date) {
+        self.macID = macID
         self.nonce = nonce
         self.issuedAt = issuedAt
     }
