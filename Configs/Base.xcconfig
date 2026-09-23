@@ -1,0 +1,5 @@
+// 所有 target 共用的构建配置。
+#include "Version.xcconfig"
+
+// 本地签名配置（开发团队 ID 等），不提交到仓库。复制 Local.xcconfig.example 后修改。
+#include? "Local.xcconfig"

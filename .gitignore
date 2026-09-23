@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Xcode（工程文件由 XcodeGen 生成）
+*.xcodeproj
+*.xcworkspace
+xcuserdata/
+DerivedData/
+*.xcresult
+
+# SwiftPM
+.build/
+.swiftpm/
+Package.resolved
+
+# 本地签名配置
+Configs/Local.xcconfig
+
+# 原型输出（日志、抓拍照片）
+Probe/output/
+
+# 发版产物
+dist/
+
+# Claude Code 本地设置
+.claude/settings.local.json

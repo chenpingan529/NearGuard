@@ -1,0 +1,90 @@
+# XcodeGen 配置。不要手工修改 NearGuard.xcodeproj，改这里后运行 scripts/bootstrap.sh 重新生成。
+name: NearGuard
+options:
+  bundleIdPrefix: com.nearguard
+  deploymentTarget:
+    iOS: "26.0"
+    macOS: "26.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+
+configFiles:
+  Debug: Configs/Base.xcconfig
+  Release: Configs/Base.xcconfig
+
+packages:
+  GuardKit:
+    path: Shared/GuardKit
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    DEAD_CODE_STRIPPING: YES
+    GENERATE_INFOPLIST_FILE: YES
+    CODE_SIGN_STYLE: Automatic
+
+targets:
+  NearGuardMac:
+    type: application
+    platform: macOS
+    sources:
+      - MacApp/Sources
+    dependencies:
+      - package: GuardKit
+    entitlements:
+      path: MacApp/NearGuardMac.entitlements
+      properties:
+        # 不走沙盒：需要模拟键盘输入解锁、读取 IOKit 状态。见 docs/decisions/0002-no-sandbox-on-mac.md
+        com.apple.security.device.camera: true
+        com.apple.security.device.bluetooth: true
+    settings:
+      base:
+        PRODUCT_NAME: NearGuard
+        PRODUCT_BUNDLE_IDENTIFIER: com.nearguard.mac
+        ENABLE_HARDENED_RUNTIME: YES
+        INFOPLIST_KEY_LSUIElement: YES
+        INFOPLIST_KEY_CFBundleDisplayName: NearGuard
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription: NearGuard 通过蓝牙判断你的 iPhone 是否在附近，用于自动解锁和锁屏。
+        INFOPLIST_KEY_NSCameraUsageDescription: 警戒模式下有人操作 Mac 时，NearGuard 会用摄像头拍照并发送到你的 iPhone。
+        INFOPLIST_KEY_NSHumanReadableCopyright: Copyright © 2026 YanNan Chen. MIT License.
+
+  NearGuardiOS:
+    type: application
+    platform: iOS
+    sources:
+      - iOSApp/Sources
+    dependencies:
+      - package: GuardKit
+    settings:
+      base:
+        PRODUCT_NAME: NearGuard
+        PRODUCT_BUNDLE_IDENTIFIER: com.nearguard.ios
+        TARGETED_DEVICE_FAMILY: "1"
+        INFOPLIST_FILE: iOSApp/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: NearGuard
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription: NearGuard 通过蓝牙让你的 Mac 知道你在附近，从而自动解锁和锁屏。
+        INFOPLIST_KEY_NSCameraUsageDescription: 扫描 Mac 上显示的二维码完成配对。
+        INFOPLIST_KEY_NSFaceIDUsageDescription: 处理 Mac 报警前需要确认是你本人。
+
+schemes:
+  NearGuardMac:
+    build:
+      targets:
+        NearGuardMac: all
+    run:
+      config: Debug
+    archive:
+      config: Release
+  NearGuardiOS:
+    build:
+      targets:
+        NearGuardiOS: all
+    run:
+      config: Debug
+    archive:
+      config: Release

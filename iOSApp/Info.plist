@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- 只放 INFOPLIST_KEY_* 表达不了的键，其余键在 project.yml 里配置，构建时自动合并。 -->
+<plist version="1.0">
+<dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+		<string>remote-notification</string>
+	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.nearguard.pair</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>nearguard</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
