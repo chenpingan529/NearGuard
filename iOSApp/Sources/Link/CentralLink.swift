@@ -302,10 +302,16 @@ extension CentralLink: @preconcurrency CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didReadRSSI RSSI: NSNumber, error: Error?) {
         guard let challenge = pendingChallenge else { return }
         pendingChallenge = nil
-        guard error == nil,
-            let report = handler?.centralLinkMakeReport(challenge: challenge, rssi: RSSI.intValue),
+        if let error {
+            handler?.centralLinkLog("读取信号强度失败：\(error.localizedDescription)")
+            return
+        }
+        guard let report = handler?.centralLinkMakeReport(challenge: challenge, rssi: RSSI.intValue),
             let target = characteristic(BLEIdentifiers.report)
-        else { return }
+        else {
+            handler?.centralLinkLog("本轮未报告：没有生成报告或缺少报告特征")
+            return
+        }
         peripheral.writeValue(report, for: target, type: .withResponse)
     }
 

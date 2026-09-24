@@ -51,10 +51,16 @@ final class EventLog {
             .joined(separator: ",")
     }
 
+    /// 写入失败的行（例如 iPhone 重启后首次解锁前文件受保护），下次写入时补写。
+    private var unwritten: [String] = []
+
     private func append(_ line: String) {
+        unwritten.append(line)
+        if unwritten.count > Self.capacity { unwritten.removeFirst(unwritten.count - Self.capacity) }
         guard let handle = try? FileHandle(forWritingTo: fileURL) else { return }
         defer { try? handle.close() }
-        _ = try? handle.seekToEnd()
-        try? handle.write(contentsOf: Data((line + "\n").utf8))
+        let data = Data(unwritten.map { $0 + "\n" }.joined().utf8)
+        guard (try? handle.seekToEnd()) != nil, (try? handle.write(contentsOf: data)) != nil else { return }
+        unwritten.removeAll()
     }
 }
