@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-24
+
 M1：最简两端 App，BLE 配对与测距。
 
 ### 新增
@@ -34,5 +36,6 @@ M0：工程骨架与核心逻辑。
 - 锁屏状态下可检测键鼠输入、合盖开盖、解锁，并可正常抓拍
 - 锁屏快捷键本身会误触发检测 → 正式版加入 3 秒宽限期
 
-[Unreleased]: https://github.com/chenpingan529/NearGuard/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/chenpingan529/NearGuard/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/chenpingan529/NearGuard/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/chenpingan529/NearGuard/releases/tag/v0.1.0
