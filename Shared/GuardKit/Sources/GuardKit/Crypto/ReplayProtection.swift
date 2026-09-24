@@ -3,11 +3,13 @@ import Foundation
 /// Mac 端的挑战簿：给 iPhone 发一次性随机数，iPhone 签名后回传，每个随机数只能用一次。
 /// 用于 BLE 上的测距报告，保证签名是「刚刚」产生的。
 public struct ChallengeBook: Sendable {
+    public let macID: UUID
     public let lifetime: TimeInterval
     public let capacity: Int
     private var outstanding: [Data: Date] = [:]
 
-    public init(lifetime: TimeInterval = 10, capacity: Int = 8) {
+    public init(macID: UUID, lifetime: TimeInterval = 10, capacity: Int = 8) {
+        self.macID = macID
         self.lifetime = lifetime
         self.capacity = capacity
     }
@@ -20,7 +22,7 @@ public struct ChallengeBook: Sendable {
         if outstanding.count >= capacity, let oldest = outstanding.min(by: { $0.value < $1.value }) {
             outstanding.removeValue(forKey: oldest.key)
         }
-        let challenge = Challenge(nonce: randomBytes(16), issuedAt: now)
+        let challenge = Challenge(macID: macID, nonce: randomBytes(16), issuedAt: now)
         outstanding[challenge.nonce] = now.addingTimeInterval(lifetime)
         return challenge
     }

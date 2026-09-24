@@ -28,6 +28,14 @@ public enum GuardKitError: Error, Equatable, Sendable {
     case pairingProofMismatch
     /// 本机没有可用的安全芯片。
     case secureEnclaveUnavailable
+    /// 报告来自未配对的设备。
+    case unknownDevice
+    /// 对端不是已配对的那台设备（例如附近另一台 Mac）。
+    case wrongPeer
+    /// 当前没有进行中的配对。
+    case noActivePairing
+    /// 没有有效的信号强度，无法生成测距报告。
+    case noSignal
 }
 
 /// 生成指定长度的安全随机字节。

@@ -39,6 +39,8 @@ public struct PairedDevice: Codable, Equatable, Sendable {
 public enum Pairing {
     /// 配对请求时间戳允许的最大偏差。
     public static let maxClockSkew: TimeInterval = 120
+    /// 设备名最长字符数，保证配对请求能放进一次 BLE 写入（512 字节）。
+    public static let maxDeviceNameLength = 32
 
     /// iPhone 端：扫码后生成配对请求。
     public static func makeRequest(
@@ -49,7 +51,7 @@ public enum Pairing {
             macID: invite.macID, deviceID: deviceID
         )
         let request = PairingRequest(
-            macID: invite.macID, deviceID: deviceID, deviceName: deviceName,
+            macID: invite.macID, deviceID: deviceID, deviceName: String(deviceName.prefix(maxDeviceNameLength)),
             phonePublicKey: signer.publicKey, proof: proof, issuedAt: now
         )
         return try SignedEnvelope.seal(request, with: signer)

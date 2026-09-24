@@ -81,7 +81,7 @@ struct ReplayProtectionTests {
     let now = Date(timeIntervalSince1970: 1_800_000_000)
 
     @Test func 挑战只能核销一次() throws {
-        var book = ChallengeBook()
+        var book = ChallengeBook(macID: UUID())
         let challenge = book.issue(now: now)
         try book.consume(challenge.nonce, now: now.addingTimeInterval(1))
         #expect(throws: GuardKitError.unknownChallenge) {
@@ -90,7 +90,7 @@ struct ReplayProtectionTests {
     }
 
     @Test func 过期挑战被拒绝() {
-        var book = ChallengeBook(lifetime: 10)
+        var book = ChallengeBook(macID: UUID(), lifetime: 10)
         let challenge = book.issue(now: now)
         #expect(throws: GuardKitError.unknownChallenge) {
             try book.consume(challenge.nonce, now: now.addingTimeInterval(10))
@@ -98,12 +98,12 @@ struct ReplayProtectionTests {
     }
 
     @Test func 未签发的挑战被拒绝() {
-        var book = ChallengeBook()
+        var book = ChallengeBook(macID: UUID())
         #expect(throws: GuardKitError.unknownChallenge) { try book.consume(Data([9]), now: now) }
     }
 
     @Test func 挑战数量不超过容量() {
-        var book = ChallengeBook(lifetime: 100, capacity: 3)
+        var book = ChallengeBook(macID: UUID(), lifetime: 100, capacity: 3)
         for i in 0..<10 { _ = book.issue(now: now.addingTimeInterval(Double(i))) }
         #expect(book.outstandingCount == 3)
     }

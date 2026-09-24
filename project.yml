@@ -31,6 +31,7 @@ targets:
     platform: macOS
     sources:
       - MacApp/Sources
+      - Shared/AppSupport
     dependencies:
       - package: GuardKit
     entitlements:
@@ -56,6 +57,7 @@ targets:
     platform: iOS
     sources:
       - iOSApp/Sources
+      - Shared/AppSupport
     dependencies:
       - package: GuardKit
     settings:
